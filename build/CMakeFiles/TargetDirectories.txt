@@ -1,0 +1,7 @@
+/home/johyorti/github/fractol/build/CMakeFiles/mlx42.dir
+/home/johyorti/github/fractol/build/CMakeFiles/edit_cache.dir
+/home/johyorti/github/fractol/build/CMakeFiles/rebuild_cache.dir
+/home/johyorti/github/fractol/build/CMakeFiles/list_install_components.dir
+/home/johyorti/github/fractol/build/CMakeFiles/install.dir
+/home/johyorti/github/fractol/build/CMakeFiles/install/local.dir
+/home/johyorti/github/fractol/build/CMakeFiles/install/strip.dir
