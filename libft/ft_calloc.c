@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 12:51:41 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/06 13:01:19 by johyorti         ###   ########.fr       */
+/*   Created: 2024/09/25 04:15:53 by johyorti          #+#    #+#             */
+/*   Updated: 2024/10/09 15:05:36 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractol.h"
+#include "libft.h"
 
-void	ft_print_usage(void)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	ft_putendl_fd("Usage: ./fractol <mandelbrot | julia>", 2);
-	ft_putendl_fd(" For julia set: ./fractol julia <real_part> <imaginary_part>", 2);
-	ft_putendl_fd(" Example for julia: ./fractol julia 0.285 0.01", 2);
-	exit(EXIT_FAILURE);
-}
+	void	*ptr;
+	size_t	tsize;
 
-void	ft_error_exit(const char *msg)
-{
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(msg, 2);
-	exit(EXIT_FAILURE);
+	tsize = nmemb * size;
+	if (nmemb != 0 && tsize / nmemb != size)
+		return (NULL);
+	ptr = malloc(tsize);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, tsize);
+	return (ptr);
 }

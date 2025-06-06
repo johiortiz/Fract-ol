@@ -6,7 +6,7 @@
 #    By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/21 01:52:56 by johyorti          #+#    #+#              #
-#    Updated: 2025/06/05 17:20:46 by johyorti         ###   ########.fr        #
+#    Updated: 2025/06/06 12:50:22 by johyorti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,10 @@ NAME = fractol
 SRCS = $(wildcard src/*.c) 
 OBJS = $(SRCS:.c=.o)
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
-LIBMLX_PATH = ./MLX42
+
+LIBMLX_PATH = ./MLX42 
 
 MLX_FLAGS = -I$(LIBMLX_PATH)/include -L$(LIBMLX_PATH)/build -lmlx42 -lglfw -L/usr/lib -lX11 -lm -pthread
 

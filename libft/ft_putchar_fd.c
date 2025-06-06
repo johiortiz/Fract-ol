@@ -1,28 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 12:51:41 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/06 13:01:19 by johyorti         ###   ########.fr       */
+/*   Created: 2024/10/04 04:48:00 by johyorti          #+#    #+#             */
+/*   Updated: 2024/10/07 11:21:13 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractol.h"
+#include "libft.h"
 
-void	ft_print_usage(void)
+void	ft_putchar_fd(char c, int fd)
 {
-	ft_putendl_fd("Usage: ./fractol <mandelbrot | julia>", 2);
-	ft_putendl_fd(" For julia set: ./fractol julia <real_part> <imaginary_part>", 2);
-	ft_putendl_fd(" Example for julia: ./fractol julia 0.285 0.01", 2);
-	exit(EXIT_FAILURE);
-}
-
-void	ft_error_exit(const char *msg)
-{
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(msg, 2);
-	exit(EXIT_FAILURE);
+	write(fd, &c, 1);
 }

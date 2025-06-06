@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 12:51:41 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/06 13:01:19 by johyorti         ###   ########.fr       */
+/*   Created: 2024/10/07 22:29:14 by johyorti          #+#    #+#             */
+/*   Updated: 2024/10/09 03:32:40 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractol.h"
+#include "libft.h"
 
-void	ft_print_usage(void)
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	ft_putendl_fd("Usage: ./fractol <mandelbrot | julia>", 2);
-	ft_putendl_fd(" For julia set: ./fractol julia <real_part> <imaginary_part>", 2);
-	ft_putendl_fd(" Example for julia: ./fractol julia 0.285 0.01", 2);
-	exit(EXIT_FAILURE);
-}
+	t_list	*new_node;
+	t_list	*start;
 
-void	ft_error_exit(const char *msg)
-{
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(msg, 2);
-	exit(EXIT_FAILURE);
+	if (!lst)
+		return (NULL);
+	start = NULL;
+	while (lst)
+	{
+		new_node = ft_lstnew(f(lst->content));
+		if (!new_node)
+		{
+			ft_lstclear(&start, del);
+			return (NULL);
+		}
+		ft_lstadd_back(&start, new_node);
+		lst = lst->next;
+	}
+	return (start);
 }

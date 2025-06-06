@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 12:51:41 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/06 13:01:19 by johyorti         ###   ########.fr       */
+/*   Created: 2024/09/21 05:58:01 by johyorti          #+#    #+#             */
+/*   Updated: 2024/09/26 07:26:26 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractol.h"
+#include "libft.h"
 
-void	ft_print_usage(void)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	ft_putendl_fd("Usage: ./fractol <mandelbrot | julia>", 2);
-	ft_putendl_fd(" For julia set: ./fractol julia <real_part> <imaginary_part>", 2);
-	ft_putendl_fd(" Example for julia: ./fractol julia 0.285 0.01", 2);
-	exit(EXIT_FAILURE);
-}
+	size_t	i;
 
-void	ft_error_exit(const char *msg)
-{
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(msg, 2);
-	exit(EXIT_FAILURE);
+	i = 0;
+	while (i < n && s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	if (i == n)
+		return (0);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

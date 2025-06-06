@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/05 19:17:39 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/05 19:22:51 by johyorti         ###   ########.fr       */
+/*   Created: 2025/06/06 13:18:33 by johyorti          #+#    #+#             */
+/*   Updated: 2025/06/06 13:25:52 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	fractol_init(t_fractol *fractol)
 	else if (ft_strncmp(fractol->name, "julia", 5) == 0)
 	{
 		fractol->min_real = -2.0;
-		fractol->max_real = -2.0;
+		fractol->max_real = 2.0;
 		fractol->min_imag = -2.0;
 		fractol->max_imag = 2.0;
 	}
