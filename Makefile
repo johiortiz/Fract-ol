@@ -6,37 +6,41 @@
 #    By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/21 01:52:56 by johyorti          #+#    #+#              #
-#    Updated: 2025/04/21 07:17:04 by johyorti         ###   ########.fr        #
+#    Updated: 2025/06/05 17:20:46 by johyorti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fractol
-CFLAGS = -Wall -Wetra -Werror -Wunreachable-code -Ofast
-LIBMLX	:= ./lib/MLX42
+SRCS = $(wildcard src/*.c) 
+OBJS = $(SRCS:.c=.o)
+CC = gcc
+CFLAGS = -Wall -Werror -Wextra
 
-HEADERS	:= -I${workspaceFolder} ./include -I $(LIBMLX)/include
-LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
-SRCS	:= $(shell find ./src -iname "*.c")
-OBJS	:= ${SRCS:.c=.o}
+LIBMLX_PATH = ./MLX42
 
-all: libmlx $(NAME)
+MLX_FLAGS = -I$(LIBMLX_PATH)/include -L$(LIBMLX_PATH)/build -lmlx42 -lglfw -L/usr/lib -lX11 -lm -pthread
 
-libmlx:
-	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
+LIBFT_PATH = libft
+LIBFT_A = $(LIBFT_PATH)/libft.a
+LIBFT_FLAGS = -L$(LIBFT_PATH) -lft
 
-%.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)"
+all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	$(MAKE) -C $(LIBFT_PATH) # Esto compilará tu libft primero (si la usas)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_FLAGS) $(MLX_FLAGS) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJS)
-	@rm -rf $(LIBMLX)/build
+	rm -f $(OBJS)
+	$(MAKE) -C $(LIBFT_PATH) clean # Limpia también la libft (si la usas)
 
 fclean: clean
-	@rm -rf $(NAME)
+	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_PATH) fclean # Limpia también la libft (si la usas)
 
-re: clean all
+re: fclean all
 
-.PHONY: all, clean, fclean, re, libmlx
+.PHONY: all clean fclean re
