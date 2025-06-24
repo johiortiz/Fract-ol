@@ -5,29 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 13:18:33 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/06 13:25:52 by johyorti         ###   ########.fr       */
+/*   Created: 2025/06/14 21:02:03 by johyorti          #+#    #+#             */
+/*   Updated: 2025/06/17 22:24:01 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	fractol_init(t_fractol *fractol)
+static void	malloc_error(void)
 {
-	fractol->max_iterations = 50;
-	if (ft_strncmp(fractol->name, "mandelbrot", 10) == 0)
+	perror("Problems with malloc");
+	exit(EXIT_FAILURE);
+}
+
+static void	data_init(t_fractal *fractal)
+{
+	fractal->escape_value = 4;
+	fractal->iterations_definition = 42;
+	fractal->shift_x = 0.0;
+	fractal->shift_y = 0.0;
+	fractal->zoom = 1.0;
+}
+
+static void	events_init(t_fractal *fractal)
+{
+	mlx_key_hook(fractal->mlx, key_handler, fractal);
+	mlx_scroll_hook(fractal->mlx, mouse_handler, fractal);
+	mlx_close_hook(fractal->mlx, close_handler, fractal);
+	if (!ft_strncmp(fractal->name, "julia", 5))
+		mlx_cursor_hook(fractal->mlx, julia_track, fractal);
+}
+
+void	fractal_init(t_fractal *fractal)
+{
+	fractal->mlx = mlx_init(WIDTH, HEIGHT, fractal->name, true);
+	if (NULL == fractal->mlx)
+		malloc_error();
+	fractal->img = mlx_new_image(fractal->mlx, WIDTH, HEIGHT);
+	if (NULL == fractal->img)
 	{
-		fractol->min_real = -2.0;
-		fractol->max_real = 1.0;
-		fractol->min_imag = -1.5;
-		fractol->max_imag = 1.5;
+		mlx_terminate(fractal->mlx);
+		malloc_error();
 	}
-	else if (ft_strncmp(fractol->name, "julia", 5) == 0)
+	if (mlx_image_to_window(fractal->mlx, fractal->img, 0, 0) == -1)
 	{
-		fractol->min_real = -2.0;
-		fractol->max_real = 2.0;
-		fractol->min_imag = -2.0;
-		fractol->max_imag = 2.0;
+		mlx_delete_image(fractal->mlx, fractal->img);
+		mlx_terminate(fractal->mlx);
+		malloc_error();
 	}
-	fractol->zoom_factor = (fractol->max_real - fractol->min_real) / WIDTH;
+
+	events_init(fractal);
+	data_init(fractal);
 }
