@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/04/21 01:52:56 by johyorti          #+#    #+#              #
-#    Updated: 2025/06/16 22:45:01 by johyorti         ###   ########.fr        #
+#    Created: 2025/06/26 20:49:15 by johyorti          #+#    #+#              #
+#    Updated: 2025/06/27 00:26:32 by johyorti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = fractol
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g -O3 -march=native -ffast-math
 MLX42_DIR = MLX42
 MLX42_BUILD = $(MLX42_DIR)/build
 MLX42_LIB = $(MLX42_BUILD)/libmlx42.a

@@ -6,7 +6,7 @@
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 20:40:17 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/18 12:12:26 by johyorti         ###   ########.fr       */
+/*   Updated: 2025/06/26 20:57:49 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,19 @@ int ft_strncmp(char *s1, char *s2, int n)
     return (*s1 - *s2);
 }
 
-void    putstr_fd(char *s, int fd)
+void    ft_putstr_fd(char *s, int fd)
 {
     if (NULL == s || fd < 0)
         return ;
     if (*s != '\0')
     {
-        write(fd, s, 1);
-        putstr_fd(s + 1, fd);
+        if (write(fd, s, 1) == -1)
+            return;
+        ft_putstr_fd(s + 1, fd);
     }
 }
 
-double  atodbl(char *s)
+double  ft_atodbl(char *s)
 {
     long    integer_part;
     double  fractional_part;

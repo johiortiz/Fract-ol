@@ -5,55 +5,52 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/14 21:02:03 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/17 22:24:01 by johyorti         ###   ########.fr       */
+/*   Created: 2025/06/26 19:41:17 by johyorti          #+#    #+#             */
+/*   Updated: 2025/06/27 00:14:49 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-static void	malloc_error(void)
+void	fractal_init(t_fractal *f, int ac, char **av)
 {
-	perror("Problems with malloc");
-	exit(EXIT_FAILURE);
-}
-
-static void	data_init(t_fractal *fractal)
-{
-	fractal->escape_value = 4;
-	fractal->iterations_definition = 42;
-	fractal->shift_x = 0.0;
-	fractal->shift_y = 0.0;
-	fractal->zoom = 1.0;
-}
-
-static void	events_init(t_fractal *fractal)
-{
-	mlx_key_hook(fractal->mlx, key_handler, fractal);
-	mlx_scroll_hook(fractal->mlx, mouse_handler, fractal);
-	mlx_close_hook(fractal->mlx, close_handler, fractal);
-	if (!ft_strncmp(fractal->name, "julia", 5))
-		mlx_cursor_hook(fractal->mlx, julia_track, fractal);
-}
-
-void	fractal_init(t_fractal *fractal)
-{
-	fractal->mlx = mlx_init(WIDTH, HEIGHT, fractal->name, true);
-	if (NULL == fractal->mlx)
-		malloc_error();
-	fractal->img = mlx_new_image(fractal->mlx, WIDTH, HEIGHT);
-	if (NULL == fractal->img)
+	(void)ac;
+	f->mlx = mlx_init(WIDTH, HEIGHT, av[1], false);
+	f->img = mlx_new_image(f->mlx, WIDTH, HEIGHT);
+	f->base_img = mlx_new_image(f->mlx, WIDTH, HEIGHT);
+	mlx_image_to_window(f->mlx, f->img, 0, 0);
+	f->type = av[1];
+	f->zoom = 1.0;
+	f->base_zoom = 1.0;
+	f->offset_x = 0.0;
+	f->offset_y = 0.0;
+	f->max_iter = 80;
+	f->color_shift = 0;
+	f->mouse_down = false;
+	f->mouse_x = 0;
+	f->mouse_y = 0;
+	f->drag_start_offset_x = 0;
+	f->drag_start_offset_y = 0;
+	f->need_render = true;
+	f->is_zooming = false;
+	f->current_y = 0;
+	f->scrolling_this_frame = false;
+	if (!ft_strncmp(f->type, "julia", 5))
 	{
-		mlx_terminate(fractal->mlx);
-		malloc_error();
+		f->julia_c.re = ft_atodbl(av[2]);
+		f->julia_c.im = ft_atodbl(av[3]);
+		f->offset_x = -0.5;
+		f->offset_y = 0.0;
 	}
-	if (mlx_image_to_window(fractal->mlx, fractal->img, 0, 0) == -1)
+	else
 	{
-		mlx_delete_image(fractal->mlx, fractal->img);
-		mlx_terminate(fractal->mlx);
-		malloc_error();
+		f->offset_x = 0.0;
+		f->offset_y = 0.0;
 	}
-
-	events_init(fractal);
-	data_init(fractal);
+	set_hooks(f);
+	// Render inicial
+	fractal_render(f);
+	update_base_image(f);
 }
+
+

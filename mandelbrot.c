@@ -5,29 +5,42 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 13:36:12 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/06 13:41:49 by johyorti         ###   ########.fr       */
+/*   Created: 2025/06/26 19:59:09 by johyorti          #+#    #+#             */
+/*   Updated: 2025/06/26 23:50:45 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	mandelbrot(t_fractol *fractol)
+uint32_t	draw_mandelbrot(t_fractal *f, int x, int y)
 {
-	int	x;
-	int	y;
-	int	color;
+	t_complex	c;
+	t_complex	z = {0, 0};
+	int	iter;
+	double	zr_sq, zi_sq;
+	double	temp;
 
-	y = 0;
-	while (y < HEIGHT)
+	// Precalcular coordenadas del plano complejo
+	c.re = ((x + 0.5) - WIDTH / 2.0) / (0.5 * f->zoom * WIDTH) + f->offset_x;
+	c.im = ((y + 0.5) - HEIGHT / 2.0) / (0.5 * f->zoom * HEIGHT) + f->offset_y;
+	
+	// Optimización: evitar funciones y cálculos redundantes
+	iter = 0;
+	while (iter < f->max_iter)
 	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			color = (x * 255 / WIDTH) << 24 || (y * 255 / HEIGHT) << 16 | 0x0000FF0 | 0xFF;
-			put_pixel(fractol->img, x, y color);
-			x++;
-		}
-		y++;
+		zr_sq = z.re * z.re;
+		zi_sq = z.im * z.im;
+		
+		// Condición de escape optimizada
+		if (zr_sq + zi_sq > 4.0)
+			break;
+		
+		// Iteración mandelbrot optimizada (inline)
+		temp = zr_sq - zi_sq + c.re;
+		z.im = 2.0 * z.re * z.im + c.im;
+		z.re = temp;
+		
+		iter++;
 	}
+	return (get_color(iter, f->max_iter, f->color_shift));
 }

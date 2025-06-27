@@ -5,125 +5,188 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/14 21:32:36 by johyorti          #+#    #+#             */
-/*   Updated: 2025/06/24 18:08:40 by johyorti         ###   ########.fr       */
+/*   Created: 2025/06/26 19:54:39 by johyorti          #+#    #+#             */
+/*   Updated: 2025/06/26 23:07:28 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-static void	my_pixel_put(int x, int y, mlx_image_t *img, int color)
+void	fractal_render(t_fractal *f)
 {
-	if (x >= 0 && x < (int)img->width && y >= 0 && y < (int)img->height)
-		mlx_put_pixel(img, x, y, color);
-}
-
-static void	mandel_vs_julia(t_complex *z, t_complex *c, t_fractal *fractal)
-{
-	if (!ft_strncmp(fractal->name, "julia", 5))
+	int	x;
+	int	y;
+	uint32_t *pixels = (uint32_t *)f->img->pixels;
+	
+	// Renderizado completo
+	y = 0;
+	while (y < HEIGHT)
 	{
-		c->x = fractal->julia_x;
-		c->y = fractal->julia_y;
-	}
-	else
-	{
-		c->x = z->x;
-		c->y = z->y;
-	}
-}
-
-static int	get_color(int i, int max_iter)
-{
-	if (i == max_iter)
-		return (BLACK);
-	
-	double t = (double)i / max_iter;
-	int	r = (int)(9 * (1 - t) * t * t * t * 255);
-	int	g = (int)(15 * (1 - t) * (1 - t) * t * t * 255);
-	int	b = (int)(8.5 * (1 - t) * (1 - t) * (1 - t) * t * 255);
-	return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
-}
-
-// static void	handle_pixel(int x, int y, t_fractal *fractal)
-// {
-// 	t_complex	z;
-// 	t_complex	c;
-// 	int					i;
-// 	int					color;
-	
-// 	i = 0;
-	
-// 	z.x = (map(x, -2, +2, 0, WIDTH) * fractal->zoom) + fractal->shift_x;
-// 	z.y = (map(y, -2, +2, 0, HEIGHT) * fractal->zoom) + fractal->shift_y;
-
-// 	mandel_vs_julia(&z, &c, fractal);
-	
-// 	while (i < fractal->iterations_definition)
-// 	{
-// 		z = sum_complex(square_complex(z), c);
-// 		if ((z.x * z.x) + (z.y * z.y) > fractal->escape_value)
-// 		{
-// 			color = get_color(i, fractal->iterations_definition);
-// 			my_pixel_put(x, y, fractal->img, color);
-// 			return ;
-// 		}
-// 		++i;
-// 	}
-// 	my_pixel_put(x, y, fractal->img, BLACK);
-// }
-
-static void	*render_strip(void *arg)
-{
-	t_threads_data	*td = (t_threads_data *)arg;
-	t_fractal *f = td->f;
-	
-	int y = td->start_y;
-	while(y < td->end_y)
-	{
-		int x = 0;
+		x = 0;
 		while (x < WIDTH)
 		{
-			t_complex	z;
-			t_complex	c;
-			int i = 0;
-			z.x = map(x, -2, 2, 0, WIDTH) * f->zoom + f->shift_x;
-			z.y = map(y, -2, 2, 0, HEIGHT) * f->zoom + f->shift_y;
-			mandel_vs_julia(&z, &c, f);
-			while (i < f->iterations_definition)
-			{
-				z = sum_complex(square_complex(z), c);
-				if ((z.x * z.x + z.y * z.y) > f->escape_value)
-					break ;
-				i++;
-			}
-			int	color = get_color(i, f->iterations_definition);
-			my_pixel_put(x, y, f->img, color);
+			if (!ft_strncmp(f->type, "mandelbrot", 10))
+				pixels[y * WIDTH + x] = draw_mandelbrot(f, x, y);
+			else
+				pixels[y * WIDTH + x] = draw_julia(f, x, y);
 			x++;
 		}
 		y++;
 	}
-	return (NULL);
+	f->need_render = false;
 }
 
-void	fractal_render(t_fractal *f)
+// Preview rápido de baja resolución durante interacciones
+void	fractal_render_preview(t_fractal *f)
 {
-	pthread_t	threads[THREADS];
-	t_threads_data	td[THREADS];
+	int	x, y;
+	uint32_t *pixels = (uint32_t *)f->img->pixels;
+	int	step = 4; // Renderizar cada 4 píxeles
 	
-	int i = 0;
-	while (i < THREADS)
+	// Renderizado de baja resolución
+	y = 0;
+	while (y < HEIGHT)
 	{
-		td[i].f = f;
-		td[i].start_y = i * (HEIGHT / THREADS);
-		td[i].end_y = (i + 1) * (HEIGHT / THREADS);
-		td[i].end_y = (i + 1) * (HEIGHT / THREADS);
-		pthread_create(&threads[i], NULL, render_strip, &td[i]);		
-		i++;
+		x = 0;
+		while (x < WIDTH)
+		{
+			uint32_t color;
+			if (!ft_strncmp(f->type, "mandelbrot", 10))
+				color = draw_mandelbrot(f, x, y);
+			else
+				color = draw_julia(f, x, y);
+			
+			// Rellenar bloque de píxeles
+			int dy = 0;
+			while (dy < step && (y + dy) < HEIGHT)
+			{
+				int dx = 0;
+				while (dx < step && (x + dx) < WIDTH)
+				{
+					pixels[(y + dy) * WIDTH + (x + dx)] = color;
+					dx++;
+				}
+				dy++;
+			}
+			x += step;
+		}
+		y += step;
 	}
-	i = 0;
-	while (i < THREADS)
+}
+
+// Renderizar solo una línea para mantener fluidez
+void	fractal_render_line(t_fractal *f)
+{
+	int	x;
+	uint32_t *pixels = (uint32_t *)f->img->pixels;
+	int	step = 1;
+	
+	if (f->current_y >= HEIGHT)
 	{
-		pthread_join(threads[i], NULL);
-		i++;
+		f->current_y = 0;
+		f->need_render = false;
+		return;
 	}
+	
+	// Renderizado adaptativo: usar step más grande durante interacciones
+	if (f->mouse_down)
+		step = 4; // Saltar píxeles para preview rápido
+	
+	x = 0;
+	while (x < WIDTH)
+	{
+		uint32_t color;
+		if (!ft_strncmp(f->type, "mandelbrot", 10))
+			color = draw_mandelbrot(f, x, f->current_y);
+		else
+			color = draw_julia(f, x, f->current_y);
+		
+		// Rellenar píxeles según el step
+		int i = 0;
+		while (i < step && (x + i) < WIDTH)
+		{
+			pixels[f->current_y * WIDTH + x + i] = color;
+			i++;
+		}
+		x += step;
+	}
+	f->current_y++;
+}
+
+// Zoom fluido por escalado sin recálculo
+void	scaled_zoom_render(t_fractal *f, double zoom_factor)
+{
+	int	x, y;
+	uint32_t *pixels = (uint32_t *)f->img->pixels;
+	uint32_t *base_pixels = (uint32_t *)f->base_img->pixels;
+	int	center_x = WIDTH / 2;
+	int	center_y = HEIGHT / 2;
+	
+	// Limpiar imagen actual
+	y = 0;
+	while (y < HEIGHT)
+	{
+		x = 0;
+		while (x < WIDTH)
+		{
+			pixels[y * WIDTH + x] = 0x000000FF; // Negro por defecto
+			x++;
+		}
+		y++;
+	}
+	
+	// Escalar imagen base con interpolación mejorada
+	y = 0;
+	while (y < HEIGHT)
+	{
+		x = 0;
+		while (x < WIDTH)
+		{
+			// Calcular posición en imagen base
+			double src_x_f = center_x + (x - center_x) / zoom_factor;
+			double src_y_f = center_y + (y - center_y) / zoom_factor;
+			int src_x = (int)src_x_f;
+			int src_y = (int)src_y_f;
+			
+			// Verificar límites con un poco de margen
+			if (src_x >= 1 && src_x < (WIDTH-1) && src_y >= 1 && src_y < (HEIGHT-1))
+			{
+				// Interpolación bilineal simple
+				double fx = src_x_f - src_x;
+				double fy = src_y_f - src_y;
+				
+				if (fx < 0.5 && fy < 0.5)
+					pixels[y * WIDTH + x] = base_pixels[src_y * WIDTH + src_x];
+				else if (fx >= 0.5 && fy < 0.5)
+					pixels[y * WIDTH + x] = base_pixels[src_y * WIDTH + (src_x + 1)];
+				else if (fx < 0.5 && fy >= 0.5)
+					pixels[y * WIDTH + x] = base_pixels[(src_y + 1) * WIDTH + src_x];
+				else
+					pixels[y * WIDTH + x] = base_pixels[(src_y + 1) * WIDTH + (src_x + 1)];
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+// Copiar imagen actual a imagen base tras terminar zoom
+void	update_base_image(t_fractal *f)
+{
+	int	x, y;
+	uint32_t *pixels = (uint32_t *)f->img->pixels;
+	uint32_t *base_pixels = (uint32_t *)f->base_img->pixels;
+	
+	y = 0;
+	while (y < HEIGHT)
+	{
+		x = 0;
+		while (x < WIDTH)
+		{
+			base_pixels[y * WIDTH + x] = pixels[y * WIDTH + x];
+			x++;
+		}
+		y++;
+	}
+	f->base_zoom = f->zoom;
 }
