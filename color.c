@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnstr.c                                       :+:      :+:    :+:   */
+/*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: johyorti <johyorti@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/21 05:12:01 by johyorti          #+#    #+#             */
-/*   Updated: 2024/09/26 08:26:22 by johyorti         ###   ########.fr       */
+/*   Created: 2025/06/27 17:41:43 by johyorti          #+#    #+#             */
+/*   Updated: 2025/06/28 16:44:47 by johyorti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "fractol.h"
 
-char	*ft_strnstr(const char *big, const char *little, size_t len)
+int	get_color(int iter, int max_iter, int shift)
 {
-	size_t	i;
-	size_t	j;
+	int	ci;
+	int	r;
+	int	g;
+	int	b;
 
-	if (!*little)
-		return ((char *)big);
-	if (!len)
-		return (NULL);
-	i = 0;
-	while (big[i] && i < len)
-	{
-		j = 0;
-		while (little[j] && (i + j) < len && little[j] == big[i + j])
-		{
-			j++;
-			if (!little[j])
-				return ((char *)&big[i]);
-		}
-		i++;
-	}
-	return (NULL);
+	if (iter == max_iter)
+		return (0x000000FF);
+	ci = (iter * 255) / max_iter;
+	r = (ci * (shift * 3 + 5)) % 256;
+	g = (ci * (shift * 7 + 3)) % 256;
+	b = (ci * (shift * 11 + 1)) % 256;
+	return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
 }
