@@ -73,3 +73,18 @@ Or run with some supported fractal:
 ```
 
 # 🌄 Screenshots
+
+## Mandelbrot set
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_2.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_3.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_4.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_5.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_6.png)
+
+## Julia set
+
+![Fractal Julia](README_files/screenshots/julia_1.png)
+![Fractal Julia](README_files/screenshots/julia_2.png)
+![Fractal Julia](README_files/screenshots/julia_3.png)
+![Fractal Julia](README_files/screenshots/julia_4.png)
