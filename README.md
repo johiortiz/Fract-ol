@@ -1,6 +1,6 @@
 <div align="center">
  <!-- Project Name -->
-  <h1>Fractol Project</h1>
+  <h1>Fract-ol Project</h1>
 
   <p>
     <img src="https://img.shields.io/badge/score-110%20%2F%20100-success?style=for-the-badge" />
@@ -73,3 +73,18 @@ Or run with some supported fractal:
 ```
 
 # 🌄 Screenshots
+
+## Mandelbrot set
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_2.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_3.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_4.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_5.png)
+![Fractal Mandelbrot](README_files/screenshots/mandelbrot_6.png)
+
+## Julia set
+
+![Fractal Julia](README_files/screenshots/julia_1.png)
+![Fractal Julia](README_files/screenshots/julia_2.png)
+![Fractal Julia](README_files/screenshots/julia_3.png)
+![Fractal Julia](README_files/screenshots/julia_4.png)
