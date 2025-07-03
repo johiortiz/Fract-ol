@@ -1,6 +1,6 @@
 <div align="center">
  <!-- Project Name -->
-  <h1>Fractol Project</h1>
+  <h1>Fract-ol Project</h1>
 
   <p>
     <img src="https://img.shields.io/badge/score-110%20%2F%20100-success?style=for-the-badge" />
