@@ -81,6 +81,7 @@ Or run with some supported fractal:
 ![Fractal Mandelbrot](README_files/screenshots/mandelbrot_4.png)
 ![Fractal Mandelbrot](README_files/screenshots/mandelbrot_5.png)
 ![Fractal Mandelbrot](README_files/screenshots/mandelbrot_6.png)
+![Fractal Mandelbrot Animation](README_files/screenshots/fractol_mandelbrot.gif)
 
 ## Julia set
 
@@ -88,3 +89,4 @@ Or run with some supported fractal:
 ![Fractal Julia](README_files/screenshots/julia_2.png)
 ![Fractal Julia](README_files/screenshots/julia_3.png)
 ![Fractal Julia](README_files/screenshots/julia_4.png)
+![Fractal Julia Animation](README_files/screenshots/fractol_julia.gif)
